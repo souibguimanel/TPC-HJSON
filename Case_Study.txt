@@ -1,0 +1,108 @@
+A. Discovery of Identifier Candidates
+
+ 1) Identifying the Initial List of Identifier Candidates:
+ 
+      Collection Nation: [$/N_NATIONKEY, $/N_COMMENT, $/N_NAME]
+      Collection Orders: [$/Customers/PHONE, $/O_ORDERDATE, $/Customers/ADDRESS, $/Customers/NAME, $/O_CLERK, $/Customers/CUSTKEY, $/Customers/COMMENT, $/Customers/ACCTBAL, $/O_ORDERKEY, $/O_TOTALPRICE]
+
+ 2) Scoring Identifier Candidates
+
+ Collection Nation: 
+   Field: $/N_NATIONKEY, Score: 1.0
+   Field: $/N_NAME, Score: 0.6333333
+   Field: $/N_COMMENT, Score: 0.4018868
+
+ Collection Orders:
+   Field: $/O_ORDERKEY, Score: 1.0
+   Field: $/Customers/CUSTKEY, Score: 0.71999997
+   Field: $/Customers/PHONE, Score: 0.34285715
+   Field: $/O_ORDERDATE, Score: 0.35
+   Field: $/Customers/ADDRESS, Score: 0.3229167
+   Field: $/Customers/NAME, Score: 0.33818182
+   Field: $/O_CLERK, Score: 0.46190476
+   Field: $/Customers/COMMENT, Score: 0.31363386
+   Field: $/O_TOTALPRICE, Score: 0.4666667
+   Field: $/Customers/ACCTBAL, Score: 0.31333333
+
+ 3) Pruning Identifier Candidates
+ Collection Nation: 
+     Upper: [$/N_NATIONKEY]
+
+ Collection Orders:   
+
+    Upper: [$/O_ORDERKEY]
+
+B. Identifying Candidate Pairs of Key Fields: Identifiers and References
+
+
+
+
+ 1)Creating the Initial Set of Pairs
+
+Cartesian product([$/N_NATIONKEY], Orders)
+
+    <pair: [$/O_ORDERDATE, Date], [$/N_NATIONKEY, String]>
+    <pair: [$/O_COMMENT, String], [$/N_NATIONKEY, String]>
+    <pair: [$/O_ORDERSTATUS, String], [$/N_NATIONKEY, String]>
+    <pair: [$/O_ORDERKEY, String], [$/N_NATIONKEY, String]>
+    <pair: [$/O_TOTALPRICE, String], [$/N_NATIONKEY, String]>
+    <pair: [$/O_CLERK, String], [$/N_NATIONKEY, String]>
+    <pair: [$/O_ORDERPRIORITY, String], [$/N_NATIONKEY, String]>
+    <pair: [$/O_SHIPPRIORITY, String], [$/N_NATIONKEY, String]>
+    <pair: [$/customer/ADDRESS, String], [$/N_NATIONKEY, String]>
+    <pair: [$/customer/PHONE, String], [$/N_NATIONKEY, String]>
+    <pair: [$/customer/NATIONKEY, String], [$/N_NATIONKEY, String]>
+    <pair: [$/customer/CUSTKEY, String], [$/N_NATIONKEY, String]>
+    <pair: [$/customer/ACCTBAL, String], [$/N_NATIONKEY, String]>
+    <pair: [$/customer/MKTSEGMENT, String], [$/N_NATIONKEY, String]>
+    <pair: [$/customer/COMMENT, String], [$/N_NATIONKEY, String]>
+    <pair: [$/customer/NAME, String], [$/N_NATIONKEY, String]>
+    
+Cartesian product([$/O_ORDERKEY], Nation)
+    <pair: [$/N_COMMENT, Null], [$/O_ORDERKEY, String]>
+    <pair: [$/N_NAME, String], [$/O_ORDERKEY, String]>
+    <pair: [$/N_NATIONKEY, String], [$/O_ORDERKEY, String]>
+    <pair: [$/Region/REGIONKEY, String], [$/O_ORDERKEY, String]>
+    <pair: [$/Region/COMMENT, String], [$/O_ORDERKEY, String]>
+    <pair: [$/Region/NAME, String], [$/O_ORDERKEY, String]>
+
+
+ 2) Filtering
+   2.1) Compatibility of data type
+
+    <pair: [$/O_ORDERKEY, String], [$/N_NATIONKEY, String]>
+    <pair: [$/O_TOTALPRICE, String], [$/N_NATIONKEY, String]>
+    <pair: [$/O_SHIPPRIORITY, String], [$/N_NATIONKEY, String]>
+    <pair: [$/customer/CUSTKEY, String], [$/N_NATIONKEY, String]>
+    <pair: [$/customer/ACCTBAL, String], [$/N_NATIONKEY, String]>
+    <pair: [$/customer/NATIONKEY, String], [$/N_NATIONKEY, String]>
+    <pair: [$/Region/REGIONKEY, String], [$/O_ORDERKEY, String]>
+    <pair: [$/N_COMMENT, Null], [$/O_ORDERKEY, String]>
+
+
+
+   2.2) Syntactic similarity based pruning
+
+
+    <pair: [$/O_ORDERKEY, String], [$/N_NATIONKEY, String]>               : 0.2
+    <pair: [$/O_TOTALPRICE, String], [$/N_NATIONKEY, String]>             : 0.0
+    <pair: [$/O_SHIPPRIORITY, String], [$/N_NATIONKEY, String]>           : 0.0
+    <pair: [$/customer/CUSTKEY, String], [$/N_NATIONKEY, String]>         : 0.2
+    <pair: [$/customer/ACCTBAL, String], [$/N_NATIONKEY, String]>         : 0.0
+    <pair: [$/customer/NATIONKEY, String], [$/N_NATIONKEY, String]>       : 0.66 > 0.5
+    <pair: [$/Region/REGIONKEY, String], [$/O_ORDERKEY, String]>          : 0.25
+    <pair: [$/N_COMMENT, Null], [$/O_ORDERKEY, String]>                   : 0.0
+
+
+
+ 
+   2.3) Semantic similarity based pruning
+
+     ø
+
+
+Final result: 
+     <pair: [$/customer/NATIONKEY, String], [$/N_NATIONKEY, String]>  
+
+  Identifier: $/N_NATIONKEY
+  Reference: $/customer/NATIONKEY
